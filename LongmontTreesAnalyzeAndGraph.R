@@ -113,10 +113,28 @@ treeDensityWithTime <- combinedAnnexTreeCounts_yearBin %>% group_by(yearBin) %>%
   left_join(areaByYearBin, by="yearBin") %>% 
   mutate(numTreesPerAcre = totalTrees/totalArea_acres)
 
+treeDensityTimeGraph <- ggplot(data = treeDensityWithTime, mapping = aes(x = yearBin, y = numTreesPerAcre, group = 1)) + 
+  geom_line() + geom_point() + 
+  theme_bw() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+treeDensityTimeGraph
+
 # Percentage of the total number of each species planted in each of the time bins
 treesForSpeciesPercPlotWithTime <- inputTrees_v2 %>% group_by(majorTreeType, yearBin) %>% 
   summarize(numTypePerYearBin = n())
 
-# 
+# Add the total number of trees per species through a join and re-name the count column
+treesForSpeciesPercPlotWithTime_v2 <- dplyr::left_join(x = treesForSpeciesPercPlotWithTime, y = treesForSpeciesPlot, by = "majorTreeType") %>%
+  rename(totalForSpecies = treeCount)
 
+treesForSpeciesPercPlotWithTime_v2$percentSpeciesTotal <- (treesForSpeciesPercPlotWithTime_v2$numTypePerYearBin / treesForSpeciesPercPlotWithTime_v2$totalForSpecies) * 100
+
+# stacked bar plot of changes through time (different bar segments) for each
+# species (x categories)
+
+speciesChangeTimeGraph <- ggplot(data = treesForSpeciesPercPlotWithTime_v2, mapping = aes(x = majorTreeType, y = percentSpeciesTotal, group = yearBin, fill = yearBin)) + 
+  geom_col() + theme_bw() + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+speciesChangeTimeGraph
 
