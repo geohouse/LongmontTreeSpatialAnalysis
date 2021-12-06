@@ -138,3 +138,18 @@ speciesChangeTimeGraph <- ggplot(data = treesForSpeciesPercPlotWithTime_v2, mapp
 
 speciesChangeTimeGraph
 
+# Calc percentage of each species in greenways
+treesForSpeciesPercGreenways <- inputTrees_v2 %>% group_by(majorTreeType, inGreenwayBuffer) %>%
+  summarize(numTrees = n())
+
+treesForSpeciesPercGreenways_v2 <- dplyr::left_join(x = treesForSpeciesPercGreenways, y = treesForSpeciesPlot, by = "majorTreeType") %>%
+  rename(totalForSpecies = treeCount)
+
+treesForSpeciesPercGreenways_v2$percentSpeciesTotal <- (treesForSpeciesPercGreenways_v2$numTrees / treesForSpeciesPercGreenways_v2$totalForSpecies) * 100
+
+speciesGreenwayGraph <- ggplot(data = treesForSpeciesPercGreenways_v2, mapping = aes(x = majorTreeType, y = percentSpeciesTotal, group = inGreenwayBuffer, fill = inGreenwayBuffer)) + 
+  geom_col() + theme_bw() + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+speciesGreenwayGraph
+
