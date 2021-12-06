@@ -1,2 +1,2 @@
 # LongmontTreeSpatialAnalysis
- Analyzing spatial patterns of longmont city trees
+ Analyzing spatial patterns of Longmont city trees
