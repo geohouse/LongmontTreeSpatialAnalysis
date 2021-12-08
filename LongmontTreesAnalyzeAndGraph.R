@@ -134,7 +134,9 @@ treesForSpeciesPercPlotWithTime_v2$percentSpeciesTotal <- (treesForSpeciesPercPl
 
 speciesChangeTimeGraph <- ggplot(data = treesForSpeciesPercPlotWithTime_v2, mapping = aes(x = majorTreeType, y = percentSpeciesTotal, group = yearBin, fill = yearBin)) + 
   geom_col() + theme_bw() + 
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + 
+  scale_fill_manual(values = c("#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#a65628", "#f781bf", "#999999")) +
+  ylab("Percentage of each tree type") + xlab("Major tree types") + labs(fill = "Year range")
 
 speciesChangeTimeGraph
 
