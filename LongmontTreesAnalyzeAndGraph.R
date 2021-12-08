@@ -149,7 +149,11 @@ treesForSpeciesPercGreenways_v2$percentSpeciesTotal <- (treesForSpeciesPercGreen
 
 speciesGreenwayGraph <- ggplot(data = treesForSpeciesPercGreenways_v2, mapping = aes(x = majorTreeType, y = percentSpeciesTotal, group = inGreenwayBuffer, fill = inGreenwayBuffer)) + 
   geom_col() + theme_bw() + 
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + 
+  scale_fill_manual(values = c("#4d9221", "#c51b7d")) + ylab("Percentage of each tree type") + 
+  xlab("Major tree types") + labs(fill = "")
+  
 
 speciesGreenwayGraph
+
 
