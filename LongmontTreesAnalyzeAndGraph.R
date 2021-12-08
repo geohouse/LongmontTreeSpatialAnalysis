@@ -101,7 +101,9 @@ combinedAnnexTreeCounts_yearBin$yearBinTotal <- rep(x = combinedAnnexTreeCounts_
 combinedAnnexTreeCounts_yearBin$percentageOfYearBinTotal <- (combinedAnnexTreeCounts_yearBin$numberTreesYearBin / combinedAnnexTreeCounts_yearBin$yearBinTotal) * 100
 
 propGreenwayThroughTimeGraph <- ggplot(data = combinedAnnexTreeCounts_yearBin, mapping = aes(x = yearBin, y = percentageOfYearBinTotal, group = inGreenwayBuffer, color = inGreenwayBuffer)) + 
-  geom_line() + theme_bw() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  geom_line(size=1) + geom_point(size=2) + theme_bw() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + 
+  ylab("Percentage of total") + xlab("Year range") + labs(color="") + 
+  scale_color_manual(values = c("#4d9221", "#c51b7d"))
 
 propGreenwayThroughTimeGraph
 
@@ -114,8 +116,9 @@ treeDensityWithTime <- combinedAnnexTreeCounts_yearBin %>% group_by(yearBin) %>%
   mutate(numTreesPerAcre = totalTrees/totalArea_acres)
 
 treeDensityTimeGraph <- ggplot(data = treeDensityWithTime, mapping = aes(x = yearBin, y = numTreesPerAcre, group = 1)) + 
-  geom_line() + geom_point() + 
-  theme_bw() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  geom_line(size=1) + geom_point(size=2) + 
+  theme_bw() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + 
+  ylab("Number of trees per acre") + xlab("Year range")
 
 treeDensityTimeGraph
 
