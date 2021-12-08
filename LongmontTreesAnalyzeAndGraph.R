@@ -15,12 +15,34 @@ inputTrees_v2 <- inputTrees[which(!is.na(inputTrees$YearAnnexed_num)),]
 # Change the blank entry for tree type (trees not in the bins considered here) to 'Other'
 inputTrees_v2$majorTreeType[which(inputTrees_v2$majorTreeType=="")] <- "Other"
 
+# Has to be sorted alphabetically by tree name for the color assignment to work
+# properly.
 treesForSpeciesPlot <- inputTrees_v2 %>% group_by(majorTreeType) %>% summarise(treeCount = n()) %>% 
-  arrange(desc(treeCount))
+  arrange(majorTreeType)
 
-speciesPlot <- ggplot(data = treesForSpeciesPlot, mapping = aes(x =  reorder(majorTreeType,-treeCount), y = treeCount)) + 
+# Half generalized function to assign colors for specific tree group names regardless
+# of the position of their entry in the input dataset.
+makeColorVector <- function(inputVector){
+  inputVector[which(treesForSpeciesPlot$majorTreeType == "Pine")] <- "#1b9e77"
+  inputVector[which(treesForSpeciesPlot$majorTreeType == "Ash")] <- "#e6ab02"
+  inputVector[which(treesForSpeciesPlot$majorTreeType == "Cottonwood")] <- "#66a61e"
+  inputVector[which(treesForSpeciesPlot$majorTreeType == "Oak")] <- "#d95f02"
+  inputVector[which(treesForSpeciesPlot$majorTreeType == "Maple")] <- "#e7298a"
+  inputVector[which(treesForSpeciesPlot$majorTreeType == "Locust")] <- "#7570b3"
+  return(inputVector)
+}
+
+# Set an initial gray vector
+blankColorVector <- rep("#888888", times = nrow(treesForSpeciesPlot))
+
+# Change the colors for the targeted species
+finalColorVector <- makeColorVector(blankColorVector)
+
+
+speciesPlot <- ggplot(data = treesForSpeciesPlot, mapping = aes(x =  reorder(majorTreeType,-treeCount), y = treeCount, fill = majorTreeType)) + 
   geom_col() + theme_bw() + xlab("Tree group") + ylab("Number of trees") + 
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + 
+  scale_fill_manual(values = finalColorVector) + theme(legend.position = "none")
 
 speciesPlot
 
@@ -138,7 +160,7 @@ treesForSpeciesPercPlotWithTime_v2$percentSpeciesTotal <- (treesForSpeciesPercPl
 speciesChangeTimeGraph <- ggplot(data = treesForSpeciesPercPlotWithTime_v2, mapping = aes(x = majorTreeType, y = percentSpeciesTotal, group = yearBin, fill = yearBin)) + 
   geom_col() + theme_bw() + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + 
-  scale_fill_manual(values = c("#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#a65628", "#f781bf", "#999999")) +
+  scale_fill_manual(values = c("#7f3b08", "#b35806", "#e08214", "#fdb863", "#fee0b6", "#d8daeb", "#b2abd2", "#8073ac", "#542788")) +
   ylab("Percentage of each tree type") + xlab("Major tree types") + labs(fill = "Year range")
 
 speciesChangeTimeGraph
